@@ -1,27 +1,108 @@
 import json
-from pathlib import Path
-from models.hotel import Hotel
-from models.customer import Customer
-from models.reservation import StandardReservation, VIPReservation, CorporateReservation
+import os
 
 
 class DataManager:
-    def __init__(self, data_directory="data"):
-        self.data_dir = Path(data_directory)
-        self.data_dir.mkdir(exist_ok=True)
+    """Manages data persistence with error handling"""
 
-        self.hotels_file = self.data_dir / "hotels.json"
-        self.customers_file = self.data_dir / "customers.json"
-        self.reservations_file = self.data_dir / "reservations.json"
+    def __init__(self):
+        self.hotels_file = "hotels.json"
+        self.customers_file = "customers.json"
+        self.reservations_file = "reservations.json"
 
-        self._initialize_files()
+    def _safe_load_json(self, filename):
+        """Safely load JSON file"""
+        if not os.path.exists(filename):
+            return []
+        try:
+            with open(filename, 'r') as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print(f"[ERROR] Corrupted JSON in {filename}. Starting fresh.")
+            return []
+        except Exception as e:
+            print(f"[ERROR] Cannot read {filename}: {e}")
+            return []
 
-    def _initialize_files(self):
-        """Create empty JSON files if they don't exist"""
-        if not self.hotels_file.exists():
-            with open(self.hotels_file, 'w') as f:
-                json.dump({"hotels": []}, f, indent=2)
+    def _safe_save_json(self, filename, data):
+        """Safely save JSON file"""
+        try:
+            with open(filename, 'w') as f:
+                json.dump(data, f, indent=4, default=str)
+        except Exception as e:
+            print(f"[ERROR] Cannot save to {filename}: {e}")
 
-        if not self.customers_file.exists():
-            with open(self.customers_file, 'w') as f:
-                json.dump({"customers": []}, f, indent=2)
+    def load_hotels(self):
+        from models import Hotel, SingleRoom, DoubleRoom, Suite
+        data = self._safe_load_json(self.hotels_file)
+        hotels = []
+        for hotel_data in data:
+            try:
+                hotel = Hotel(hotel_data["hotel_id"], hotel_data["name"],
+                            hotel_data["address"], hotel_data["description"])
+                for room_data in hotel_data.get("rooms", []):
+                    room_type = room_data["type"]
+                    if room_type == "single":
+                        room = SingleRoom(room_data["room_id"], room_data["room_number"],
+                                        room_data["floor"], room_data["price"])
+                    elif room_type == "double":
+                        room = DoubleRoom(room_data["room_id"], room_data["room_number"],
+                                        room_data["floor"], room_data["price"])
+                    else:
+                        room = Suite(room_data["room_id"], room_data["room_number"],
+                                   room_data["floor"], room_data["price"])
+                    room.is_occupied = room_data.get("is_occupied", False)
+                    hotel.rooms.append(room)
+                hotels.append(hotel)
+            except (KeyError, ValueError) as e:
+                print(f"[WARNING] Skipping invalid hotel: {e}")
+                continue
+        return hotels
+
+    def load_customers(self):
+        from models import Customer
+        data = self._safe_load_json(self.customers_file)
+        customers = []
+        for customer_data in data:
+            try:
+                customer = Customer(customer_data["customer_id"], customer_data["name"],
+                                  customer_data["email"], customer_data["phone"])
+                customers.append(customer)
+            except (KeyError, ValueError) as e:
+                print(f"[WARNING] Skipping invalid customer: {e}")
+                continue
+        return customers
+
+    def load_reservations(self):
+        from models import StandardReservation, VIPReservation, CorporateReservation
+        data = self._safe_load_json(self.reservations_file)
+        reservations = []
+        for res_data in data:
+            try:
+                res_type = res_data["type"]
+                if res_type == "standard":
+                    res_class = StandardReservation
+                elif res_type == "vip":
+                    res_class = VIPReservation
+                else:
+                    res_class = CorporateReservation
+                reservation = res_class(res_data["reservation_id"], res_data["customer_id"],
+                                      res_data["hotel_id"], res_data["room_id"],
+                                      res_data["check_in_date"], res_data["check_out_date"])
+                reservations.append(reservation)
+            except (KeyError, ValueError) as e:
+                print(f"[WARNING] Skipping invalid reservation: {e}")
+                continue
+        return reservations
+
+    def save_hotels(self, hotels):
+        data = [hotel.to_dict() for hotel in hotels]
+        self._safe_save_json(self.hotels_file, data)
+
+    def save_customers(self, customers):
+        data = [customer.to_dict() for customer in customers]
+        self._safe_save_json(self.customers_file, data)
+
+    def save_reservations(self, reservations):
+        data = [reservation.to_dict() for reservation in reservations]
+        self._safe_save_json(self.reservations_file, data)

@@ -281,10 +281,22 @@ class HotelManagementSystem:
             return
         print(f"\nCurrent: {customer}")
         # Fixed attribute names
-        first_name = input(f"New first name [{customer.first_name}]: ").strip() or customer.first_name
-        last_name = input(f"New last name [{customer.last_name}]: ").strip() or customer.last_name
-        email = input(f"New email [{customer.email}]: ").strip() or customer.email
-        phone = input(f"New phone [{customer.phone}]: ").strip() or customer.phone
+        first_name = (
+            input(f"New first name [{customer.first_name}]: ").strip()
+            or customer.first_name
+        )
+        last_name = (
+            input(f"New last name [{customer.last_name}]: ").strip()
+            or customer.last_name
+        )
+        email = (
+            input(f"New email [{customer.email}]: ").strip()
+            or customer.email
+        )
+        phone = (
+            input(f"New phone [{customer.phone}]: ").strip()
+            or customer.phone
+        )
 
         customer.first_name = first_name
         customer.last_name = last_name
@@ -298,11 +310,20 @@ class HotelManagementSystem:
             print("\nNo customers to delete.")
             return
         customer_id = input("\nEnter Customer ID to delete: ").strip()
-        customer = next((c for c in self.customers if c.customer_id == customer_id), None)
+        customer = next(
+            (c for c in self.customers if c.customer_id == customer_id), None
+        )
         if not customer:
             print("Customer not found!")
             return
-        confirm = input(f"Delete '{customer.first_name} {customer.last_name}'? (yes/no): ").strip().lower()
+        confirm = (
+            input(
+                f"Delete '{customer.first_name} {customer.last_name}'? "
+                "(yes/no): "
+            )
+            .strip()
+            .lower()
+        )
         if confirm == "yes":
             self.customers.remove(customer)
             self.save_all()
@@ -325,7 +346,9 @@ class HotelManagementSystem:
         for h in self.hotels:
             print(f"  {h.hotel_id}: {h.name}")
         hotel_id = input("Hotel ID: ").strip()
-        hotel = next((h for h in self.hotels if h.hotel_id == hotel_id), None)
+        hotel = next(
+            (h for h in self.hotels if h.hotel_id == hotel_id), None
+        )
         if not hotel:
             print("Hotel not found!")
             return
@@ -335,9 +358,14 @@ class HotelManagementSystem:
             return
         print("\nAvailable rooms:")
         for r in available_rooms:
-            print(f"  {r.room_id}: {r.room_number} - ${r.price}/night (Capacity: {r.capacity})")
+            print(
+                f"  {r.room_id}: {r.room_number} - ${r.price}/night "
+                f"(Capacity: {r.capacity})"
+            )
         room_id = input("Room ID: ").strip()
-        room = next((r for r in available_rooms if r.room_id == room_id), None)
+        room = next(
+            (r for r in available_rooms if r.room_id == room_id), None
+        )
         if not room:
             print("Room not found!")
             return
@@ -346,9 +374,13 @@ class HotelManagementSystem:
 
         # Add number_of_guests input
         try:
-            number_of_guests = int(input(f"Number of guests (max {room.capacity}): ").strip())
+            number_of_guests = int(
+                input(f"Number of guests (max {room.capacity}): ").strip()
+            )
             if number_of_guests < 1 or number_of_guests > room.capacity:
-                print(f"Invalid number of guests! Must be 1-{room.capacity}")
+                print(
+                    f"Invalid number of guests! Must be 1-{room.capacity}"
+                )
                 return
         except ValueError:
             print("Invalid input!")
@@ -360,14 +392,35 @@ class HotelManagementSystem:
 
         # Pass number_of_guests to all constructors
         if res_type == "1":
-            reservation = StandardReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
-                                              number_of_guests)
+            reservation = StandardReservation(
+                reservation_id,
+                customer_id,
+                hotel_id,
+                room_id,
+                check_in,
+                check_out,
+                number_of_guests
+            )
         elif res_type == "2":
-            reservation = VIPReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
-                                         number_of_guests)
+            reservation = VIPReservation(
+                reservation_id,
+                customer_id,
+                hotel_id,
+                room_id,
+                check_in,
+                check_out,
+                number_of_guests
+            )
         elif res_type == "3":
-            reservation = CorporateReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
-                                               number_of_guests)
+            reservation = CorporateReservation(
+                reservation_id,
+                customer_id,
+                hotel_id,
+                room_id,
+                check_in,
+                check_out,
+                number_of_guests
+            )
         else:
             print("Invalid type!")
             return
@@ -390,14 +443,23 @@ class HotelManagementSystem:
             print("\nNo reservations to update.")
             return
         reservation_id = input("\nEnter Reservation ID: ").strip()
-        reservation = next((r for r in self.reservations if r.reservation_id == reservation_id), None)
+        reservation = next(
+            (r for r in self.reservations if r.reservation_id == reservation_id),
+            None
+        )
         if not reservation:
             print("Reservation not found!")
             return
         print(f"\nCurrent: {reservation}")
         # Fixed attribute names
-        check_in = input(f"New check-in [{reservation.check_in}]: ").strip() or reservation.check_in
-        check_out = input(f"New check-out [{reservation.check_out}]: ").strip() or reservation.check_out
+        check_in = (
+            input(f"New check-in [{reservation.check_in}]: ").strip()
+            or reservation.check_in
+        )
+        check_out = (
+            input(f"New check-out [{reservation.check_out}]: ").strip()
+            or reservation.check_out
+        )
 
         reservation.check_in = check_in
         reservation.check_out = check_out

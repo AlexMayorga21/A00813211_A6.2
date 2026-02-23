@@ -28,7 +28,13 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer_dict["last_name"], "Doe")
 
     def test_customer_from_dict(self):
-        data = {"customer_id": "C2", "first_name": "Jane", "last_name": "Smith", "email": "jane@email.com", "phone": "9876543210"}
+        data = {
+            "customer_id": "C2",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane@email.com",
+            "phone": "9876543210"
+        }
         customer = Customer.from_dict(data)
         self.assertEqual(customer.customer_id, "C2")
         self.assertEqual(customer.first_name, "Jane")
@@ -62,7 +68,15 @@ class TestRooms(unittest.TestCase):
         self.assertEqual(room_dict["is_occupied"], False)
 
     def test_room_from_dict(self):
-        data = {"room_id": "R1", "room_number": "101", "capacity": 1, "price": 100.0, "is_occupied": False, "room_type": "SingleRoom", "floor": 1}
+        data = {
+            "room_id": "R1",
+            "room_number": "101",
+            "capacity": 1,
+            "price": 100.0,
+            "is_occupied": False,
+            "room_type": "SingleRoom",
+            "floor": 1
+        }
         room = SingleRoom.from_dict(data)
         self.assertEqual(room.room_id, "R1")
         self.assertEqual(room.room_number, "101")

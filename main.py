@@ -1,3 +1,9 @@
+"""
+Hotel Management System module.
+
+This module implements a command-line hotel management system with support
+for managing hotels, customers, and reservations.
+"""
 from models.hotel import Hotel
 from models.customer import Customer
 from models.room import SingleRoom, DoubleRoom, Suite
@@ -6,7 +12,10 @@ from utils import DataManager
 
 
 class HotelManagementSystem:
+    """A hotel management system for handling hotels, customers, and reservations."""
+
     def __init__(self):
+        """Initialize the hotel management system by loading data from files."""
         self.data_manager = DataManager()
         self.hotels = self.data_manager.load_hotels()
         self.customers = self.data_manager.load_customers()
@@ -133,6 +142,7 @@ class HotelManagementSystem:
 
     # ============ HOTEL CRUD ============
     def create_hotel(self):
+        """Create a new hotel by prompting user for hotel details."""
         print("\n--- CREATE HOTEL ---")
         hotel_id = input("Hotel ID: ").strip()
         if not hotel_id:
@@ -150,6 +160,7 @@ class HotelManagementSystem:
         print("Hotel created successfully!")
 
     def view_hotels(self):
+        """Display all hotels and their room counts."""
         if not self.hotels:
             print("\nNo hotels found.")
             return
@@ -159,6 +170,7 @@ class HotelManagementSystem:
             print(f"   Rooms: {len(hotel.rooms)}")
 
     def update_hotel(self):
+        """Update hotel details by prompting for new values."""
         if not self.hotels:
             print("\nNo hotels to update.")
             return
@@ -178,6 +190,7 @@ class HotelManagementSystem:
         print("Hotel updated successfully!")
 
     def delete_hotel(self):
+        """Delete a hotel after user confirmation."""
         if not self.hotels:
             print("\nNo hotels to delete.")
             return
@@ -193,6 +206,7 @@ class HotelManagementSystem:
             print("Hotel deleted successfully!")
 
     def add_room_to_hotel(self):
+        """Add a new room to an existing hotel."""
         if not self.hotels:
             print("\nNo hotels available.")
             return
@@ -225,6 +239,7 @@ class HotelManagementSystem:
         print("Room added successfully!")
 
     def search_hotels(self):
+        """Search for hotels by name."""
         if not self.hotels:
             print("\nNo hotels to search.")
             return
@@ -239,6 +254,7 @@ class HotelManagementSystem:
 
     # ============ CUSTOMER CRUD ============
     def create_customer(self):
+        """Create a new customer by prompting user for customer details."""
         try:
             print("\n--- CREATE CUSTOMER ---")
             customer_id = input("Customer ID: ").strip()
@@ -259,10 +275,11 @@ class HotelManagementSystem:
             self.customers.append(customer)
             self.save_all()
             print("Customer created successfully!")
-        except Exception as e:
+        except (ValueError, KeyError) as e:
             print(f"[ERROR] {e}")
 
     def view_customers(self):
+        """Display all customers."""
         if not self.customers:
             print("\nNo customers found.")
             return
@@ -271,6 +288,7 @@ class HotelManagementSystem:
             print(f"\n{customer}")
 
     def update_customer(self):
+        """Update customer details by prompting for new values."""
         if not self.customers:
             print("\nNo customers to update.")
             return
@@ -306,6 +324,7 @@ class HotelManagementSystem:
         print("Customer updated successfully!")
 
     def delete_customer(self):
+        """Delete a customer after user confirmation."""
         if not self.customers:
             print("\nNo customers to delete.")
             return
@@ -330,18 +349,19 @@ class HotelManagementSystem:
             print("Customer deleted successfully!")
 
     # ============ RESERVATION CRUD ============
-    def create_reservation(self):
-        if not self.hotels or not self.customers:
-            print("\nNeed at least one hotel and customer!")
-            return
-        print("\n--- CREATE RESERVATION ---")
+    def _get_customer_from_user(self):
+        """Get validated customer ID from user input."""
         print("\nAvailable customers:")
         for c in self.customers:
             print(f"  {c.customer_id}: {c.first_name} {c.last_name}")
         customer_id = input("Customer ID: ").strip()
         if not any(c.customer_id == customer_id for c in self.customers):
             print("Customer not found!")
-            return
+            return None
+        return customer_id
+
+    def _get_hotel_and_room_from_user(self):
+        """Get validated hotel ID and room ID from user input."""
         print("\nAvailable hotels:")
         for h in self.hotels:
             print(f"  {h.hotel_id}: {h.name}")
@@ -351,11 +371,13 @@ class HotelManagementSystem:
         )
         if not hotel:
             print("Hotel not found!")
-            return
+            return None, None
+
         available_rooms = hotel.get_available_rooms()
         if not available_rooms:
             print("No available rooms!")
-            return
+            return None, None
+
         print("\nAvailable rooms:")
         for r in available_rooms:
             print(
@@ -368,60 +390,87 @@ class HotelManagementSystem:
         )
         if not room:
             print("Room not found!")
-            return
+            return None, None
+        return hotel, room
+
+    def _get_dates_from_user(self):
+        """Get check-in and check-out dates from user input."""
         check_in = input("Check-in date (YYYY-MM-DD): ").strip()
         check_out = input("Check-out date (YYYY-MM-DD): ").strip()
+        return check_in, check_out
 
-        # Add number_of_guests input
+    def _get_guest_count_from_user(self, max_capacity):
+        """Get validated number of guests from user input."""
         try:
             number_of_guests = int(
-                input(f"Number of guests (max {room.capacity}): ").strip()
+                input(f"Number of guests (max {max_capacity}): ").strip()
             )
-            if number_of_guests < 1 or number_of_guests > room.capacity:
+            if number_of_guests < 1 or number_of_guests > max_capacity:
                 print(
-                    f"Invalid number of guests! Must be 1-{room.capacity}"
+                    f"Invalid number of guests! Must be 1-{max_capacity}"
                 )
-                return
+                return None
+            return number_of_guests
         except ValueError:
             print("Invalid input!")
+            return None
+
+    def _create_reservation_by_type(self, res_type, reservation_data):
+        """Create a reservation of the specified type.
+
+        Args:
+            res_type: Type of reservation (1, 2, or 3)
+            reservation_data: Dictionary containing reservation details
+
+        Returns:
+            A reservation object or None if type is invalid
+        """
+        if res_type == "1":
+            return StandardReservation(**reservation_data)
+        if res_type == "2":
+            return VIPReservation(**reservation_data)
+        if res_type == "3":
+            return CorporateReservation(**reservation_data)
+        return None
+
+    def create_reservation(self):
+        """Create a new reservation with customer, hotel, room, and dates."""
+        if not self.hotels or not self.customers:
+            print("\nNeed at least one hotel and customer!")
+            return
+        print("\n--- CREATE RESERVATION ---")
+
+        customer_id = self._get_customer_from_user()
+        if not customer_id:
+            return
+
+        hotel, room = self._get_hotel_and_room_from_user()
+        if not hotel or not room:
+            return
+
+        check_in, check_out = self._get_dates_from_user()
+
+        number_of_guests = self._get_guest_count_from_user(room.capacity)
+        if number_of_guests is None:
             return
 
         print("\nReservation types: 1) Standard  2) VIP  3) Corporate")
         res_type = input("Select type (1-3): ").strip()
         reservation_id = f"RES{len(self.reservations) + 1:03d}"
 
-        # Pass number_of_guests to all constructors
-        if res_type == "1":
-            reservation = StandardReservation(
-                reservation_id,
-                customer_id,
-                hotel_id,
-                room_id,
-                check_in,
-                check_out,
-                number_of_guests
-            )
-        elif res_type == "2":
-            reservation = VIPReservation(
-                reservation_id,
-                customer_id,
-                hotel_id,
-                room_id,
-                check_in,
-                check_out,
-                number_of_guests
-            )
-        elif res_type == "3":
-            reservation = CorporateReservation(
-                reservation_id,
-                customer_id,
-                hotel_id,
-                room_id,
-                check_in,
-                check_out,
-                number_of_guests
-            )
-        else:
+        reservation_data = {
+            'reservation_id': reservation_id,
+            'customer_id': customer_id,
+            'hotel_id': hotel.hotel_id,
+            'room_id': room.room_id,
+            'check_in': check_in,
+            'check_out': check_out,
+            'number_of_guests': number_of_guests
+        }
+
+        reservation = self._create_reservation_by_type(res_type, reservation_data)
+
+        if not reservation:
             print("Invalid type!")
             return
 
@@ -431,6 +480,7 @@ class HotelManagementSystem:
         print("Reservation created successfully!")
 
     def view_reservations(self):
+        """Display all reservations."""
         if not self.reservations:
             print("\nNo reservations found.")
             return
@@ -439,6 +489,7 @@ class HotelManagementSystem:
             print(f"\n{reservation}")
 
     def update_reservation(self):
+        """Update reservation check-in and check-out dates."""
         if not self.reservations:
             print("\nNo reservations to update.")
             return
@@ -467,6 +518,7 @@ class HotelManagementSystem:
         print("Reservation updated successfully!")
 
     def cancel_reservation(self):
+        """Cancel a reservation and free the associated room."""
         if not self.reservations:
             print("\nNo reservations to cancel.")
             return

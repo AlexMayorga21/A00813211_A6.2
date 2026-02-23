@@ -54,14 +54,34 @@ class Reservation(ABC):
         return StandardReservation.from_dict(data)
 
     def __str__(self):
-        return f"Reservation {self.reservation_id} for Customer {self.customer_id} - {self.status} - {self.get_nights()} nights"
+        return (
+            f"Reservation {self.reservation_id} for Customer "
+            f"{self.customer_id} - {self.status} - {self.get_nights()} nights"
+        )
 
 
 class StandardReservation(Reservation):
-    def __init__(self, reservation_id, customer_id, hotel_id, room_id,
-                 check_in, check_out, number_of_guests, status="pending"):
-        super().__init__(reservation_id, customer_id, hotel_id, room_id,
-                        check_in, check_out, number_of_guests, status)
+    def __init__(
+        self,
+        reservation_id,
+        customer_id,
+        hotel_id,
+        room_id,
+        check_in,
+        check_out,
+        number_of_guests,
+        status="pending"
+    ):
+        super().__init__(
+            reservation_id,
+            customer_id,
+            hotel_id,
+            room_id,
+            check_in,
+            check_out,
+            number_of_guests,
+            status
+        )
         self.reservation_type = "Standard"
 
     def calculate_total_cost(self, room_price):
@@ -85,10 +105,27 @@ class StandardReservation(Reservation):
 
 
 class VIPReservation(Reservation):
-    def __init__(self, reservation_id, customer_id, hotel_id, room_id,
-                 check_in, check_out, number_of_guests, status="pending"):
-        super().__init__(reservation_id, customer_id, hotel_id, room_id,
-                        check_in, check_out, number_of_guests, status)
+    def __init__(
+        self,
+        reservation_id,
+        customer_id,
+        hotel_id,
+        room_id,
+        check_in,
+        check_out,
+        number_of_guests,
+        status="pending"
+    ):
+        super().__init__(
+            reservation_id,
+            customer_id,
+            hotel_id,
+            room_id,
+            check_in,
+            check_out,
+            number_of_guests,
+            status
+        )
         self.reservation_type = "VIP"
 
     def calculate_total_cost(self, room_price):
@@ -112,10 +149,27 @@ class VIPReservation(Reservation):
 
 
 class CorporateReservation(Reservation):
-    def __init__(self, reservation_id, customer_id, hotel_id, room_id,
-                 check_in, check_out, number_of_guests, status="pending"):
-        super().__init__(reservation_id, customer_id, hotel_id, room_id,
-                        check_in, check_out, number_of_guests, status)
+    def __init__(
+        self,
+        reservation_id,
+        customer_id,
+        hotel_id,
+        room_id,
+        check_in,
+        check_out,
+        number_of_guests,
+        status="pending"
+    ):
+        super().__init__(
+            reservation_id,
+            customer_id,
+            hotel_id,
+            room_id,
+            check_in,
+            check_out,
+            number_of_guests,
+            status
+        )
         self.reservation_type = "Corporate"
 
     def calculate_total_cost(self, room_price):

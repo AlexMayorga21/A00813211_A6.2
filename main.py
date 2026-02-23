@@ -1,5 +1,7 @@
-from models import Hotel, Customer, SingleRoom, DoubleRoom, Suite
-from models import StandardReservation, VIPReservation, CorporateReservation
+from models.hotel import Hotel
+from models.customer import Customer
+from models.room import SingleRoom, DoubleRoom, Suite
+from models.reservation import StandardReservation, VIPReservation, CorporateReservation
 from utils import DataManager
 from datetime import datetime
 
@@ -16,6 +18,12 @@ class HotelManagementSystem:
         self.data_manager.save_hotels(self.hotels)
         self.data_manager.save_customers(self.customers)
         self.data_manager.save_reservations(self.reservations)
+
+    def load_all(self):
+        """Load all data from JSON files"""
+        self.hotels = self.data_manager.load_hotels()
+        self.customers = self.data_manager.load_customers()
+        self.reservations = self.data_manager.load_reservations()
 
     def run(self):
         """Main menu loop"""
@@ -128,6 +136,9 @@ class HotelManagementSystem:
     def create_hotel(self):
         print("\n--- CREATE HOTEL ---")
         hotel_id = input("Hotel ID: ").strip()
+        if not hotel_id:
+            print("Invalid Hotel ID!")
+            return
         if any(h.hotel_id == hotel_id for h in self.hotels):
             print("Hotel ID already exists!")
             return
@@ -270,10 +281,14 @@ class HotelManagementSystem:
             print("Customer not found!")
             return
         print(f"\nCurrent: {customer}")
-        name = input(f"New name [{customer.name}]: ").strip() or customer.name
+        # Fixed attribute names
+        first_name = input(f"New first name [{customer.first_name}]: ").strip() or customer.first_name
+        last_name = input(f"New last name [{customer.last_name}]: ").strip() or customer.last_name
         email = input(f"New email [{customer.email}]: ").strip() or customer.email
         phone = input(f"New phone [{customer.phone}]: ").strip() or customer.phone
-        customer.name = name
+
+        customer.first_name = first_name
+        customer.last_name = last_name
         customer.email = email
         customer.phone = phone
         self.save_all()
@@ -321,7 +336,7 @@ class HotelManagementSystem:
             return
         print("\nAvailable rooms:")
         for r in available_rooms:
-            print(f"  {r.room_id}: {r.room_number} - ${r.price}/night")
+            print(f"  {r.room_id}: {r.room_number} - ${r.price}/night (Capacity: {r.capacity})")
         room_id = input("Room ID: ").strip()
         room = next((r for r in available_rooms if r.room_id == room_id), None)
         if not room:
@@ -329,18 +344,35 @@ class HotelManagementSystem:
             return
         check_in = input("Check-in date (YYYY-MM-DD): ").strip()
         check_out = input("Check-out date (YYYY-MM-DD): ").strip()
+
+        # Add number_of_guests input
+        try:
+            number_of_guests = int(input(f"Number of guests (max {room.capacity}): ").strip())
+            if number_of_guests < 1 or number_of_guests > room.capacity:
+                print(f"Invalid number of guests! Must be 1-{room.capacity}")
+                return
+        except ValueError:
+            print("Invalid input!")
+            return
+
         print("\nReservation types: 1) Standard  2) VIP  3) Corporate")
         res_type = input("Select type (1-3): ").strip()
         reservation_id = f"RES{len(self.reservations) + 1:03d}"
+
+        # Pass number_of_guests to all constructors
         if res_type == "1":
-            reservation = StandardReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out)
+            reservation = StandardReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
+                                              number_of_guests)
         elif res_type == "2":
-            reservation = VIPReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out)
+            reservation = VIPReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
+                                         number_of_guests)
         elif res_type == "3":
-            reservation = CorporateReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out)
+            reservation = CorporateReservation(reservation_id, customer_id, hotel_id, room_id, check_in, check_out,
+                                               number_of_guests)
         else:
             print("Invalid type!")
             return
+
         room.is_occupied = True
         self.reservations.append(reservation)
         self.save_all()
@@ -364,10 +396,12 @@ class HotelManagementSystem:
             print("Reservation not found!")
             return
         print(f"\nCurrent: {reservation}")
-        check_in = input(f"New check-in [{reservation.check_in_date}]: ").strip() or reservation.check_in_date
-        check_out = input(f"New check-out [{reservation.check_out_date}]: ").strip() or reservation.check_out_date
-        reservation.check_in_date = check_in
-        reservation.check_out_date = check_out
+        # Fixed attribute names
+        check_in = input(f"New check-in [{reservation.check_in}]: ").strip() or reservation.check_in
+        check_out = input(f"New check-out [{reservation.check_out}]: ").strip() or reservation.check_out
+
+        reservation.check_in = check_in
+        reservation.check_out = check_out
         self.save_all()
         print("Reservation updated successfully!")
 

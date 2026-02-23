@@ -26,4 +26,4 @@ class Customer:
         )
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.email} - {self.phone}"
+        return f"{self.customer_id}: {self.first_name} {self.last_name} ({self.email}, {self.phone})"

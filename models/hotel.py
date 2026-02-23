@@ -1,3 +1,6 @@
+from models.room import Room
+
+
 class Hotel:
     def __init__(self, hotel_id, name, address, description):
         self.hotel_id = hotel_id
@@ -19,7 +22,7 @@ class Hotel:
         return None
 
     def get_available_rooms(self):
-        return [room for room in self.rooms if room.status == "available"]
+        return [room for room in self.rooms if not room.is_occupied]
 
     def to_dict(self):
         return {
@@ -32,8 +35,6 @@ class Hotel:
 
     @staticmethod
     def from_dict(data):
-        from models.room import SingleRoom, DoubleRoom, Suite
-
         hotel = Hotel(
             data["hotel_id"],
             data["name"],
@@ -42,21 +43,11 @@ class Hotel:
         )
 
         for room_data in data.get("rooms", []):
-            room_type = room_data["room_type"]
-            if room_type == "Single":
-                room = SingleRoom(room_data["room_id"], room_data["room_number"],
-                                  room_data["floor"], room_data["price"], room_data["status"])
-            elif room_type == "Double":
-                room = DoubleRoom(room_data["room_id"], room_data["room_number"],
-                                  room_data["floor"], room_data["price"], room_data["status"])
-            elif room_type == "Suite":
-                room = Suite(room_data["room_id"], room_data["room_number"],
-                             room_data["floor"], room_data["price"], room_data["status"])
-            else:
-                continue
-            hotel.add_room(room)
+            room = Room.from_dict(room_data)
+            if room:
+                hotel.add_room(room)
 
         return hotel
 
     def __str__(self):
-        return f"{self.name} - {self.address} - {len(self.rooms)} rooms"
+        return f"{self.hotel_id}: {self.name} ({self.address}) - {len(self.rooms)} rooms"

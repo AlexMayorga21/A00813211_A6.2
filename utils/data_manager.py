@@ -65,8 +65,10 @@ class DataManager:
         customers = []
         for customer_data in data:
             try:
-                customer = Customer(customer_data["customer_id"], customer_data["name"],
-                                  customer_data["email"], customer_data["phone"])
+                #customer_id, first_name, last_name, email, phone
+                customer = Customer(customer_data["customer_id"], customer_data["first_name"],
+                                    customer_data["last_name"], customer_data["email"],
+                                    customer_data["phone"])
                 customers.append(customer)
             except (KeyError, ValueError) as e:
                 print(f"[WARNING] Skipping invalid customer: {e}")

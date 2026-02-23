@@ -1,5 +1,11 @@
+"""Data manager module for handling JSON data persistence."""
 import json
 import os
+from models import (
+    Hotel, SingleRoom, DoubleRoom, Suite,
+    Customer,
+    StandardReservation, VIPReservation, CorporateReservation
+)
 
 
 class DataManager:
@@ -15,25 +21,25 @@ class DataManager:
         if not os.path.exists(filename):
             return []
         try:
-            with open(filename, 'r') as f:
+            with open(filename, encoding='utf-8') as f:
                 return json.load(f)
         except json.JSONDecodeError:
             print(f"[ERROR] Corrupted JSON in {filename}. Starting fresh.")
             return []
-        except Exception as e:
-            print(f"[ERROR] Cannot read {filename}: {e}")
+        except (OSError, IOError):
+            print(f"[ERROR] Cannot read {filename}.")
             return []
 
     def _safe_save_json(self, filename, data):
         """Safely save JSON file"""
         try:
-            with open(filename, 'w') as f:
+            with open(filename, mode='w', encoding='utf-8') as f:
                 json.dump(data, f, indent=4, default=str)
-        except Exception as e:
+        except (OSError, IOError) as e:
             print(f"[ERROR] Cannot save to {filename}: {e}")
 
     def load_hotels(self):
-        from models import Hotel, SingleRoom, DoubleRoom, Suite
+        """Load hotels from JSON file"""
         data = self._safe_load_json(self.hotels_file)
         hotels = []
         for hotel_data in data:
@@ -76,7 +82,7 @@ class DataManager:
         return hotels
 
     def load_customers(self):
-        from models import Customer
+        """Load customers from JSON file"""
         data = self._safe_load_json(self.customers_file)
         customers = []
         for customer_data in data:
@@ -96,11 +102,7 @@ class DataManager:
         return customers
 
     def load_reservations(self):
-        from models import (
-            StandardReservation,
-            VIPReservation,
-            CorporateReservation
-        )
+        """Load reservations from JSON file"""
         data = self._safe_load_json(self.reservations_file)
         reservations = []
         for res_data in data:
@@ -128,13 +130,16 @@ class DataManager:
         return reservations
 
     def save_hotels(self, hotels):
+        """Save hotels to JSON file"""
         data = [hotel.to_dict() for hotel in hotels]
         self._safe_save_json(self.hotels_file, data)
 
     def save_customers(self, customers):
+        """Save customers to JSON file"""
         data = [customer.to_dict() for customer in customers]
         self._safe_save_json(self.customers_file, data)
 
     def save_reservations(self, reservations):
+        """Save reservations to JSON file"""
         data = [reservation.to_dict() for reservation in reservations]
         self._safe_save_json(self.reservations_file, data)

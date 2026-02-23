@@ -1,8 +1,6 @@
 import unittest
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.mock import patch, mock_open
 from io import StringIO
-import json
-import os
 from main import HotelManagementSystem
 from models import Hotel, Customer, SingleRoom, DoubleRoom, Suite
 from models import StandardReservation, VIPReservation, CorporateReservation

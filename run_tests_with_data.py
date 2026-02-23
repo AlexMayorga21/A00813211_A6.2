@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Script para ejecutar pruebas con diferentes conjuntos de datos JSON.
-Copia los archivos de prueba a los archivos principales y ejecuta el sistema.
+Script to run tests with different JSON data sets.
+Copies test files to main files and runs the system.
 """
 
+import json
 import os
 import shutil
 import sys
@@ -37,7 +38,7 @@ BACKUP_SUFFIX = ".backup"
 
 
 def backup_original_files():
-    """Respalda los archivos originales si existen"""
+    """Backs up original files if they exist"""
     files = ["hotels.json", "customers.json", "reservations.json"]
     backed_up = []
 
@@ -48,12 +49,12 @@ def backup_original_files():
             backed_up.append(filename)
 
     if backed_up:
-        print(f"✓ Backup creado para: {', '.join(backed_up)}")
+        print(f"✓ Backup created for: {', '.join(backed_up)}")
     return backed_up
 
 
 def restore_original_files():
-    """Restaura los archivos originales del backup"""
+    """Restores original files from backup"""
     files = ["hotels.json", "customers.json", "reservations.json"]
     restored = []
 
@@ -64,60 +65,58 @@ def restore_original_files():
             restored.append(filename)
 
     if restored:
-        print(f"✓ Archivos restaurados: {', '.join(restored)}")
+        print(f"✓ Files restored: {', '.join(restored)}")
 
 
 def load_test_data(test_name):
-    """Carga el conjunto de prueba especificado"""
+    """Loads the specified test data set"""
     if test_name not in TEST_SETS:
-        print(f"✗ Conjunto de prueba '{test_name}' no existe")
-        print(f"Opciones disponibles: {', '.join(TEST_SETS.keys())}")
+        print(f"✗ Test set '{test_name}' does not exist")
+        print(f"Available options: {', '.join(TEST_SETS.keys())}")
         return False
 
     test_set = TEST_SETS[test_name]
     print(f"\n{'='*70}")
-    print(f"Cargando conjunto de prueba: {test_name.upper()}")
+    print(f"Loading test set: {test_name.upper()}")
     print(f"{'='*70}\n")
 
-    # Respaldar originales
+    # Backup originals
     backup_original_files()
 
-    # Copiar archivos de prueba
+    # Copy test files
     try:
         for target_file, source_file in test_set.items():
             source_path = os.path.join(TEST_DATA_DIR, source_file)
 
             if not os.path.exists(source_path):
-                print(f"✗ Archivo de prueba no encontrado: {source_path}")
+                print(f"✗ Test file not found: {source_path}")
                 restore_original_files()
                 return False
 
             shutil.copy(source_path, f"{target_file}.json")
-            print(f"✓ Copiado: {source_file} → {target_file}.json")
+            print(f"✓ Copied: {source_file} → {target_file}.json")
 
         return True
-    except Exception as e:
-        print(f"✗ Error al copiar archivos: {e}")
+    except (OSError, IOError) as e:
+        print(f"✗ Error copying files: {e}")
         restore_original_files()
         return False
 
 
 def display_statistics():
-    """Muestra estadísticas de los datos cargados"""
-    import json
-
+    """Displays statistics of loaded data"""
     try:
-        with open("hotels.json") as f:
+        with open("hotels.json", encoding="utf-8") as f:
             hotels = json.load(f)
-        with open("customers.json") as f:
+        with open("customers.json", encoding="utf-8") as f:
             customers = json.load(f)
-        with open("reservations.json") as f:
+        with open("reservations.json", encoding="utf-8") as f:
             reservations = json.load(f)
 
-        print("\n📊 ESTADÍSTICAS DE DATOS CARGADOS:")
-        print(f"   • Hoteles:       {len(hotels)}")
-        print(f"   • Clientes:      {len(customers)}")
-        print(f"   • Reservaciones: {len(reservations)}")
+        print("\n📊 LOADED DATA STATISTICS:")
+        print(f"   • Hotels:       {len(hotels)}")
+        print(f"   • Customers:    {len(customers)}")
+        print(f"   • Reservations: {len(reservations)}")
 
         if hotels:
             total_rooms = sum(len(h.get("rooms", [])) for h in hotels)
@@ -125,20 +124,21 @@ def display_statistics():
                 sum(1 for r in h.get("rooms", []) if r.get("is_occupied"))
                 for h in hotels
             )
-            print(f"   • Habitaciones:  {total_rooms} total, {occupied} ocupadas")
+            print(f"   • Rooms:        {total_rooms} total, {occupied} occupied")
 
         print()
-    except Exception as e:
-        print(f"Error al leer estadísticas: {e}")
+    except (OSError, IOError, json.JSONDecodeError) as e:
+        print(f"Error reading statistics: {e}")
 
 
 def main():
+    """Main function to run tests with specified data set."""
     if len(sys.argv) < 2:
-        print("\nUSO: python run_tests_with_data.py <test_set>")
-        print("\nConjuntos disponibles:")
-        for test_name, test_set in TEST_SETS.items():
+        print("\nUSAGE: python run_tests_with_data.py <test_set>")
+        print("\nAvailable test sets:")
+        for test_name in TEST_SETS:
             print(f"  • {test_name}")
-        print("\nEjemplo:")
+        print("\nExample:")
         print("  python run_tests_with_data.py basic")
         print("  python run_tests_with_data.py negative")
         sys.exit(1)
@@ -147,11 +147,11 @@ def main():
 
     if load_test_data(test_name):
         display_statistics()
-        print("✓ Datos cargados correctamente")
-        print("✓ Ahora puedes ejecutar: python main.py")
+        print("✓ Data loaded successfully")
+        print("✓ Now you can run: python main.py")
         print()
     else:
-        print("✗ Error al cargar datos")
+        print("✗ Error loading data")
         sys.exit(1)
 
 

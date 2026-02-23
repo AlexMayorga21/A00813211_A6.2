@@ -319,7 +319,12 @@ class TestHotelManagementSystem(unittest.TestCase):
             self.system.create_reservation()
             self.assertIn("Need", fake_out.getvalue())
 
-    @patch('builtins.input', side_effect=['C1', 'H1', 'R1', '2024-01-10', '2024-01-15', 'invalid', '1'])
+    @patch(
+        'builtins.input',
+        side_effect=[
+            'C1', 'H1', 'R1', '2024-01-10', '2024-01-15', 'invalid', '1'
+        ]
+    )
     def test_create_reservation_invalid_guests(self, mock_input):
         hotel = Hotel("H1", "Hotel A", "Address", "Desc")
         room = SingleRoom("R1", "101", 1, 100.0)

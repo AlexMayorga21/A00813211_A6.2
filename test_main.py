@@ -301,7 +301,13 @@ class TestHotelManagementSystem(unittest.TestCase):
         hotel = Hotel("H1", "Hotel A", "Address", "Desc")
         room = SingleRoom("R1", "101", 1, 100.0)
         hotel.add_room(room)
-        customer = Customer("C1", "John", "Doe", "john@email.com", "1234567890")
+        customer = Customer(
+            "C1",
+            "John",
+            "Doe",
+            "john@email.com",
+            "1234567890"
+        )
         self.system.hotels.append(hotel)
         self.system.customers.append(customer)
         self.system.create_reservation()

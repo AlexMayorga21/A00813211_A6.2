@@ -1,7 +1,8 @@
 from models.hotel import Hotel
 from models.customer import Customer
 from models.room import Room, SingleRoom, DoubleRoom, Suite
-from models.reservation import (Reservation,
+from models.reservation import (
+    Reservation,
     StandardReservation,
     VIPReservation,
     CorporateReservation

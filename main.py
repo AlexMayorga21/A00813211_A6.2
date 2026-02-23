@@ -3,7 +3,6 @@ from models.customer import Customer
 from models.room import SingleRoom, DoubleRoom, Suite
 from models.reservation import StandardReservation, VIPReservation, CorporateReservation
 from utils import DataManager
-from datetime import datetime
 
 
 class HotelManagementSystem:

@@ -118,7 +118,8 @@ class DataManager:
                     res_data["hotel_id"],
                     res_data["room_id"],
                     res_data["check_in_date"],
-                    res_data["check_out_date"]
+                    res_data["check_out_date"],
+                    res_data.get("number_of_guests", 1)
                 )
                 reservations.append(reservation)
             except (KeyError, ValueError) as e:

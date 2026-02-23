@@ -135,7 +135,7 @@ def display_statistics():
 def main():
     if len(sys.argv) < 2:
         print("\nUSO: python run_tests_with_data.py <test_set>")
-        print(f"\nConjuntos disponibles:")
+        print("\nConjuntos disponibles:")
         for test_name, test_set in TEST_SETS.items():
             print(f"  • {test_name}")
         print("\nEjemplo:")

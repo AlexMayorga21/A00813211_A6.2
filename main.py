@@ -471,7 +471,13 @@ class HotelManagementSystem:
             print("\nNo reservations to cancel.")
             return
         reservation_id = input("\nEnter Reservation ID: ").strip()
-        reservation = next((r for r in self.reservations if r.reservation_id == reservation_id), None)
+        reservation = next(
+            (
+                r for r in self.reservations
+                if r.reservation_id == reservation_id
+            ),
+            None
+        )
         if not reservation:
             print("Reservation not found!")
             return

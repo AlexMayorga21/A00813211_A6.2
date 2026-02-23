@@ -1,0 +1,19 @@
+
+======================================================================
+Cargando conjunto de prueba: BASIC
+======================================================================
+
+✓ Backup creado para: hotels.json, customers.json, reservations.json
+✓ Copiado: test_basic_hotels.json → hotels.json
+✓ Copiado: test_basic_customers.json → customers.json
+✓ Copiado: test_basic_reservations.json → reservations.json
+
+📊 ESTADÍSTICAS DE DATOS CARGADOS:
+   • Hoteles:       2
+   • Clientes:      2
+   • Reservaciones: 1
+   • Habitaciones:  4 total, 1 ocupadas
+
+✓ Datos cargados correctamente
+✓ Ahora puedes ejecutar: python main.py
+

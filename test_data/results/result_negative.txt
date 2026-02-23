@@ -1,0 +1,19 @@
+
+======================================================================
+Cargando conjunto de prueba: NEGATIVE
+======================================================================
+
+✓ Backup creado para: hotels.json, customers.json, reservations.json
+✓ Copiado: test_negative_hotels.json → hotels.json
+✓ Copiado: test_negative_customers.json → customers.json
+✓ Copiado: test_negative_reservations.json → reservations.json
+
+📊 ESTADÍSTICAS DE DATOS CARGADOS:
+   • Hoteles:       1
+   • Clientes:      1
+   • Reservaciones: 0
+   • Habitaciones:  2 total, 2 ocupadas
+
+✓ Datos cargados correctamente
+✓ Ahora puedes ejecutar: python main.py
+

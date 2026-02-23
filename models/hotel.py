@@ -1,8 +1,20 @@
+"""Hotel model for the Hotel Management System."""
 from models.room import Room
 
 
 class Hotel:
+    """Represents a hotel with rooms and guest management capabilities."""
+
     def __init__(self, hotel_id, name, address, description):
+        """
+        Initialize a hotel.
+
+        Args:
+            hotel_id: Unique identifier for the hotel
+            name: Hotel name
+            address: Hotel address
+            description: Hotel description
+        """
         self.hotel_id = hotel_id
         self.name = name
         self.address = address
@@ -10,21 +22,26 @@ class Hotel:
         self.rooms = []
 
     def add_room(self, room):
+        """Add a room to the hotel."""
         self.rooms.append(room)
 
     def remove_room(self, room_id):
+        """Remove a room from the hotel by room ID."""
         self.rooms = [room for room in self.rooms if room.room_id != room_id]
 
     def get_room(self, room_id):
+        """Get a room by room ID."""
         for room in self.rooms:
             if room.room_id == room_id:
                 return room
         return None
 
     def get_available_rooms(self):
+        """Get all available (unoccupied) rooms."""
         return [room for room in self.rooms if not room.is_occupied]
 
     def to_dict(self):
+        """Convert hotel to dictionary representation."""
         return {
             "hotel_id": self.hotel_id,
             "name": self.name,
@@ -35,6 +52,7 @@ class Hotel:
 
     @staticmethod
     def from_dict(data):
+        """Create a hotel from dictionary data."""
         hotel = Hotel(
             data["hotel_id"],
             data["name"],
@@ -50,4 +68,5 @@ class Hotel:
         return hotel
 
     def __str__(self):
+        """Return string representation of hotel."""
         return f"{self.hotel_id}: {self.name} ({self.address}) - {len(self.rooms)} rooms"

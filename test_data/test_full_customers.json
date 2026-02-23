@@ -1,0 +1,31 @@
+[
+  {
+    "customer_id": "C001",
+    "first_name": "Alice",
+    "last_name": "Johnson",
+    "email": "alice.j@email.com",
+    "phone": "555-1111"
+  },
+  {
+    "customer_id": "C002",
+    "first_name": "Bob",
+    "last_name": "Williams",
+    "email": "bob.w@email.com",
+    "phone": "555-2222"
+  },
+  {
+    "customer_id": "C003",
+    "first_name": "Carol",
+    "last_name": "Brown",
+    "email": "carol.b@email.com",
+    "phone": "555-3333"
+  },
+  {
+    "customer_id": "C004",
+    "first_name": "David",
+    "last_name": "Davis",
+    "email": "david.d@email.com",
+    "phone": "555-4444"
+  }
+]
+

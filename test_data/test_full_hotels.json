@@ -1,0 +1,75 @@
+[
+  {
+    "hotel_id": "H001",
+    "name": "Luxury Resort",
+    "address": "1 Beach Road, Miami, FL 33139",
+    "description": "5-star beachfront resort",
+    "rooms": [
+      {
+        "room_id": "R001",
+        "room_number": "101",
+        "floor": 1,
+        "price": 250.0,
+        "type": "single",
+        "is_occupied": false
+      },
+      {
+        "room_id": "R002",
+        "room_number": "102",
+        "floor": 1,
+        "price": 300.0,
+        "type": "double",
+        "is_occupied": false
+      },
+      {
+        "room_id": "R003",
+        "room_number": "301",
+        "floor": 3,
+        "price": 500.0,
+        "type": "suite",
+        "is_occupied": false
+      }
+    ]
+  },
+  {
+    "hotel_id": "H002",
+    "name": "City Center Hotel",
+    "address": "500 Downtown Blvd, Chicago, IL 60601",
+    "description": "Modern business hotel",
+    "rooms": [
+      {
+        "room_id": "R004",
+        "room_number": "201",
+        "floor": 2,
+        "price": 180.0,
+        "type": "double",
+        "is_occupied": true
+      },
+      {
+        "room_id": "R005",
+        "room_number": "401",
+        "floor": 4,
+        "price": 400.0,
+        "type": "suite",
+        "is_occupied": false
+      }
+    ]
+  },
+  {
+    "hotel_id": "H003",
+    "name": "Airport Inn",
+    "address": "Airport Terminal 2, Los Angeles, CA 90045",
+    "description": "Convenient airport accommodation",
+    "rooms": [
+      {
+        "room_id": "R006",
+        "room_number": "50",
+        "floor": 1,
+        "price": 120.0,
+        "type": "single",
+        "is_occupied": false
+      }
+    ]
+  }
+]
+

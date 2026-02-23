@@ -1,0 +1,51 @@
+[
+  {
+    "hotel_id": "H001",
+    "name": "Grand Plaza Hotel",
+    "address": "123 Main Street, New York, NY 10001",
+    "description": "Luxury 5-star hotel in downtown Manhattan",
+    "rooms": [
+      {
+        "room_id": "R001",
+        "room_number": "101",
+        "floor": 1,
+        "price": 150.0,
+        "type": "single",
+        "is_occupied": false
+      },
+      {
+        "room_id": "R002",
+        "room_number": "102",
+        "floor": 1,
+        "price": 200.0,
+        "type": "double",
+        "is_occupied": false
+      },
+      {
+        "room_id": "R003",
+        "room_number": "201",
+        "floor": 2,
+        "price": 350.0,
+        "type": "suite",
+        "is_occupied": true
+      }
+    ]
+  },
+  {
+    "hotel_id": "H002",
+    "name": "Budget Inn",
+    "address": "456 Side Street, Brooklyn, NY 11201",
+    "description": "Affordable accommodation for travelers",
+    "rooms": [
+      {
+        "room_id": "R004",
+        "room_number": "10",
+        "floor": 1,
+        "price": 80.0,
+        "type": "single",
+        "is_occupied": false
+      }
+    ]
+  }
+]
+

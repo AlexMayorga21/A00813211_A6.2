@@ -1,0 +1,13 @@
+[
+  {
+    "reservation_id": "RES001",
+    "customer_id": "C001",
+    "hotel_id": "H001",
+    "room_id": "R003",
+    "check_in_date": "2024-12-01",
+    "check_out_date": "2024-12-05",
+    "type": "vip",
+    "number_of_guests": 3
+  }
+]
+

@@ -1,0 +1,33 @@
+[
+  {
+    "reservation_id": "RES001",
+    "customer_id": "C001",
+    "hotel_id": "H001",
+    "room_id": "R001",
+    "check_in_date": "2024-12-15",
+    "check_out_date": "2024-12-20",
+    "type": "standard",
+    "number_of_guests": 1
+  },
+  {
+    "reservation_id": "RES002",
+    "customer_id": "C002",
+    "hotel_id": "H002",
+    "room_id": "R004",
+    "check_in_date": "2024-12-10",
+    "check_out_date": "2024-12-12",
+    "type": "corporate",
+    "number_of_guests": 2
+  },
+  {
+    "reservation_id": "RES003",
+    "customer_id": "C003",
+    "hotel_id": "H001",
+    "room_id": "R003",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-01-07",
+    "type": "vip",
+    "number_of_guests": 4
+  }
+]
+

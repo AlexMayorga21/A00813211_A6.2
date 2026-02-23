@@ -1,0 +1,27 @@
+[
+  {
+    "hotel_id": "H100",
+    "name": "Test Hotel - All Occupied",
+    "address": "789 Test Ave",
+    "description": "Hotel with no available rooms",
+    "rooms": [
+      {
+        "room_id": "R100",
+        "room_number": "999",
+        "floor": 9,
+        "price": 100.0,
+        "type": "double",
+        "is_occupied": true
+      },
+      {
+        "room_id": "R101",
+        "room_number": "998",
+        "floor": 9,
+        "price": 150.0,
+        "type": "suite",
+        "is_occupied": true
+      }
+    ]
+  }
+]
+
